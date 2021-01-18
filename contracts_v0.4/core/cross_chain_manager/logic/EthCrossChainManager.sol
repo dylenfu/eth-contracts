@@ -17,7 +17,9 @@ contract EthCrossChainManager is IEthCrossChainManager, UpgradableECCM {
     event CrossChainEvent(address indexed sender, bytes txId, address proxyOrAssetContract, uint64 toChainId, bytes toContract, bytes rawdata);
     event VerifyHeaderAndExecuteTxEvent(uint64 fromChainID, bytes toContract, bytes crossChainTxHash, bytes fromChainTxHash);
     
-    constructor(address _eccd, uint64 _chainId) UpgradableECCM(_eccd, _chainId) public {}
+    constructor(address _eccd, address _op, uint64 _chainId) UpgradableECCM(_eccd, _chainId) public {
+        _transferOwnership(_op);
+    }
     
     /* @notice              sync Poly chain genesis block header to smart contrat
     *  @dev                 this function can only be called once, nextbookkeeper of rawHeader can't be empty

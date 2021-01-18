@@ -7,8 +7,9 @@ import "./../interface/IEthCrossChainManagerProxy.sol";
 contract EthCrossChainManagerProxy is IEthCrossChainManagerProxy, Ownable, Pausable {
     address private EthCrossChainManagerAddr_;
     
-    constructor(address _ethCrossChainManagerAddr) public {
+    constructor(address _ethCrossChainManagerAddr, address _op) public {
         EthCrossChainManagerAddr_ = _ethCrossChainManagerAddr;
+        _transferOwnership(_op);
     }
     
     function pause() onlyOwner public returns (bool) {

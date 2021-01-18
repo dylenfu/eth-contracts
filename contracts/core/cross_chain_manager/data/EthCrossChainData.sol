@@ -29,6 +29,10 @@ contract EthCrossChainData is IEthCrossChainData, Ownable, Pausable{
     
     // Extra map for the usage of future potentially
     mapping(bytes32 => mapping(bytes32 => bytes)) public ExtraData;
+
+    constructor(address op) public {
+        _transferOwnership(op);
+    }
     
     // Store Current Epoch Start Height of Poly chain block
     function putCurEpochStartHeight(uint32 curEpochStartHeight) public whenNotPaused onlyOwner returns (bool) {
