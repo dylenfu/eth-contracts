@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.6.0;
 
 import "./libs/ownership/Ownable.sol";
@@ -10,7 +12,6 @@ import "./libs/token/ERC721/IERC721Receiver.sol";
 import "./libs/math/SafeMath.sol";
 import "./core/cross_chain_manager/interface/IEthCrossChainManager.sol";
 import "./core/cross_chain_manager/interface/IEthCrossChainManagerProxy.sol";
-
 
 contract NFTLockProxy is IERC721Receiver, Ownable {
     using SafeMath for uint;
