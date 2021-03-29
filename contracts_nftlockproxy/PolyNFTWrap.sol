@@ -25,7 +25,7 @@ contract PolyNFTWrapper is Ownable, Pausable, ReentrancyGuard {
         uint64 toChainId;
     }
 
-    event PolyWrapperLock(address indexed fromAsset, address indexed sender, uint64 toChainId, bytes toAddress, uint256 tokenId, uint256 fee, uint id);
+    event PolyWrapperLock(address indexed fromAsset, address indexed sender, uint64 toChainId, address toAddress, uint256 tokenId, uint256 fee, uint id);
     event PolyWrapperSpeedUp(address indexed fromAsset, bytes indexed txHash, address indexed sender, uint256 efee);
 
     constructor(address _owner, uint _chainId) public {
@@ -62,7 +62,7 @@ contract PolyNFTWrapper is Ownable, Pausable, ReentrancyGuard {
         }
     }
 
-    function lock(address fromAsset, uint64 toChainId, bytes memory toAddress, uint256 tokenId, uint256 fee, uint id) external payable nonReentrant whenNotPaused {    
+    function lock(address fromAsset, uint64 toChainId, address toAddress, uint256 tokenId, uint256 fee, uint id) external payable nonReentrant whenNotPaused {    
         require(toChainId != chainId && toChainId != 0, "!toChainId");
         _pull(fromAsset, fee);
         _push(fromAsset, toChainId, toAddress, tokenId);
@@ -82,16 +82,16 @@ contract PolyNFTWrapper is Ownable, Pausable, ReentrancyGuard {
         }
     }
 
-    function _push(address fromAsset, uint64 toChainId, bytes memory toAddress, uint256 tokenId) internal {
+    function _push(address fromAsset, uint64 toChainId, address toAddress, uint256 tokenId) internal {
         IERC721 nftContract = IERC721(fromAsset);
         nftContract.approve(address(lockProxy), tokenId);
 
         CallArgs memory callArgs = CallArgs({
-            toAddress: toAddress,
+            toAddress: abi.encodePacked(toAddress),
             toChainId: toChainId
         });
         bytes memory callData = _serializeCallArgs(callArgs);
-        require(nftContract.safeTransferFrom(msg.sender, toAddress, tokenId, callData), "lock erc721 failed");
+        nftContract.safeTransferFrom(msg.sender, toAddress, tokenId, callData);
     }
 
     function _serializeCallArgs(CallArgs memory args) internal pure returns (bytes memory) {
